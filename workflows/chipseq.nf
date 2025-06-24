@@ -112,9 +112,6 @@ workflow CHIPSEQ {
         params.seq_center
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    
-    // Note: Consider implementing nf-validation plugin for enhanced samplesheet validation
-    // See: https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
 
     //
     // SUBWORKFLOW: Read QC and trim adapters
