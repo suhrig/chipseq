@@ -1,6 +1,0 @@
-N E X T F L O W  ~  version 25.04.4
-Launching `/workspace/modules/nf-core/fastqc/.nf-test-8204186175b95d62e5466e90c81558f3.nf` [wise_neumann] DSL2 - revision: f3e9f49497
-WARN: Access to undefined parameter `modules_testdata_base_path` -- Initialise it to a default value eg. `params.modules_testdata_base_path = some_value`
-ERROR ~ No such file or directory: /workspace/modules/nf-core/fastqc/.nf-test/tests/8204186175b95d62e5466e90c81558f3/nullgenomics/sarscov2/illumina/bam/test.paired_end.sorted.bam
-
- -- Check script '/workspace/modules/nf-core/fastqc/.nf-test-8204186175b95d62e5466e90c81558f3.nf' at line: 34 or see '/workspace/modules/nf-core/fastqc/.nf-test/tests/8204186175b95d62e5466e90c81558f3/meta/nextflow.log' file for more details

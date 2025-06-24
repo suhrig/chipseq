@@ -1,6 +1,0 @@
-N E X T F L O W  ~  version 25.04.4
-Launching `/workspace/modules/nf-core/fastqc/.nf-test-b418377539694759af41b5b80bf4c565.nf` [suspicious_jennings] DSL2 - revision: 693d861fff
-WARN: Access to undefined parameter `modules_testdata_base_path` -- Initialise it to a default value eg. `params.modules_testdata_base_path = some_value`
-ERROR ~ No such file or directory: /workspace/modules/nf-core/fastqc/.nf-test/tests/b418377539694759af41b5b80bf4c565/nullgenomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz
-
- -- Check script '/workspace/modules/nf-core/fastqc/.nf-test-b418377539694759af41b5b80bf4c565.nf' at line: 34 or see '/workspace/modules/nf-core/fastqc/.nf-test/tests/b418377539694759af41b5b80bf4c565/meta/nextflow.log' file for more details
