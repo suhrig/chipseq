@@ -149,7 +149,7 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is in a
 
 > [!IMPORTANT]
 > As of v2.2.0dev, the pipeline uses the `-bga` option in `bedtools genomecov` instead of `-bg`. This includes zero-coverage bins in the output, resulting in lower background levels and better visualization in IGV. Users who prefer the previous behavior can override this by adding `-bg` to the `ext.args` parameter in their configuration:
-> 
+>
 > ```groovy
 > process {
 >     withName: '.*:BAM_BEDGRAPH_BIGWIG_BEDTOOLS_UCSC:BEDTOOLS_GENOMECOV' {
