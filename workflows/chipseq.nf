@@ -89,7 +89,7 @@ if (anno_readme && file(anno_readme).exists()) {
 workflow CHIPSEQ {
 
     take:
-    ch_samplesheet   // channel: path(sample_sheet.csv)
+    ch_samplesheet   // channel: [[ row ], [ row ], ...] - parsed and validated samplesheet from nf-schema
     ch_versions      // channel: [ path(versions.yml) ]
     ch_fasta         // channel: path(genome.fa)
     ch_fai           // channel: path(genome.fai)
@@ -112,9 +112,6 @@ workflow CHIPSEQ {
         params.seq_center
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
 
     //
     // SUBWORKFLOW: Read QC and trim adapters

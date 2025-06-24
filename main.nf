@@ -71,10 +71,8 @@ workflow NFCORE_CHIPSEQ {
     //
     // WORKFLOW: Run nf-core/chipseq workflow
     //
-    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
-
     CHIPSEQ(
-        ch_samplesheet,
+        PIPELINE_INITIALISATION.out.samplesheet,
         ch_versions,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.fai,

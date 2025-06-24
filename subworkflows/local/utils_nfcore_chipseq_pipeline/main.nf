@@ -72,6 +72,10 @@ workflow PIPELINE_INITIALISATION {
     //
 
     ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
+        .map { row ->
+            // Additional validation and transformations
+            validateSamplesheetRow(row)
+        }
 
     emit:
     samplesheet = ch_samplesheet
@@ -131,6 +135,51 @@ workflow PIPELINE_COMPLETION {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+//
+// Validate and transform samplesheet row
+//
+def validateSamplesheetRow(LinkedHashMap row) {
+    // Replace spaces with underscores in sample name
+    if (row.sample.contains(' ')) {
+        log.warn "WARNING: Spaces have been replaced by underscores for sample: ${row.sample}"
+        row.sample = row.sample.replaceAll(' ', '_')
+    }
+    
+    // Replace spaces with underscores in antibody name
+    if (row.antibody && row.antibody.contains(' ')) {
+        log.warn "WARNING: Spaces have been replaced by underscores for antibody: ${row.antibody}"
+        row.antibody = row.antibody.replaceAll(' ', '_')
+    }
+    
+    // Replace spaces with underscores in control name
+    if (row.control && row.control.contains(' ')) {
+        log.warn "WARNING: Spaces have been replaced by underscores for control: ${row.control}"
+        row.control = row.control.replaceAll(' ', '_')
+    }
+    
+    // Validate that both antibody and control are specified together
+    if (row.antibody && !row.control) {
+        error("ERROR: Both antibody and control columns must be specified!\nSample: ${row.sample}")
+    }
+    if (row.control && !row.antibody) {
+        error("ERROR: Both antibody and control columns must be specified!\nSample: ${row.sample}")
+    }
+    if (row.control && !row.control_replicate) {
+        error("ERROR: Control replicate must be specified when control is provided!\nSample: ${row.sample}")
+    }
+    
+    // Add single_end flag based on whether fastq_2 is provided
+    row.single_end = row.fastq_2 ? false : true
+    
+    // Ensure antibody and control are strings (empty if not provided)
+    row.antibody = row.antibody ?: ""
+    row.control = row.control ?: ""
+    row.control_replicate = row.control_replicate ?: ""
+    
+    return row
+}
+
 //
 // Check and validate pipeline parameters
 //
