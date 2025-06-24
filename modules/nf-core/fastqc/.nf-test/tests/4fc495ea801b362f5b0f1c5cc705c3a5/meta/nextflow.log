@@ -1,0 +1,70 @@
+Jun-24 20:02:41.762 [main] DEBUG nextflow.cli.Launcher - $> nextflow -log /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/meta/nextflow.log run /workspace/modules/nf-core/fastqc/.nf-test-4fc495ea801b362f5b0f1c5cc705c3a5.nf -params-file /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/meta/params.json -ansi-log false -with-trace /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/meta/trace.csv -w /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/work -stub
+Jun-24 20:02:41.816 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.04.4
+Jun-24 20:02:41.835 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/ubuntu/.nextflow/plugins; core-plugins: nf-amazon@2.15.0,nf-azure@1.16.0,nf-cloudcache@0.4.3,nf-codecommit@0.2.3,nf-console@1.2.1,nf-google@1.21.0,nf-k8s@1.0.0,nf-tower@1.11.3,nf-wave@1.12.1
+Jun-24 20:02:41.855 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jun-24 20:02:41.856 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jun-24 20:02:41.858 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Jun-24 20:02:41.867 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jun-24 20:02:41.903 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/ubuntu/.nextflow/secrets/store.json
+Jun-24 20:02:41.912 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@6f099cef] - activable => nextflow.secret.LocalSecretsProvider@6f099cef
+Jun-24 20:02:41.955 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Jun-24 20:02:41.969 [main] INFO  nextflow.cli.CmdRun - Launching `/workspace/modules/nf-core/fastqc/.nf-test-4fc495ea801b362f5b0f1c5cc705c3a5.nf` [romantic_poisson] DSL2 - revision: 693d861fff
+Jun-24 20:02:41.972 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jun-24 20:02:41.972 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Jun-24 20:02:42.017 [main] DEBUG nextflow.Session - Session UUID: 35de147b-094d-4507-bd2b-605d54b12533
+Jun-24 20:02:42.018 [main] DEBUG nextflow.Session - Run name: romantic_poisson
+Jun-24 20:02:42.018 [main] DEBUG nextflow.Session - Executor pool size: 8
+Jun-24 20:02:42.024 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Jun-24 20:02:42.029 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=24; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jun-24 20:02:42.055 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.04.4 build 5950
+  Created: 16-06-2025 14:23 UTC 
+  System: Linux 6.8.0-1024-aws
+  Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 21.0.7+6-Ubuntu-0ubuntu125.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 9748@cursor [172.17.0.4]
+  CPUs: 8 - Mem: 32 GB (29.8 GB) - Swap: 0 (0)
+Jun-24 20:02:42.074 [main] DEBUG nextflow.Session - Work-dir: /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/work [overlayfs]
+Jun-24 20:02:42.075 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /workspace/modules/nf-core/fastqc/bin
+Jun-24 20:02:42.083 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jun-24 20:02:42.089 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jun-24 20:02:42.096 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Jun-24 20:02:42.115 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Jun-24 20:02:42.122 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 9; maxThreads: 1000
+Jun-24 20:02:42.165 [main] DEBUG nextflow.Session - Session start
+Jun-24 20:02:42.168 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/meta/trace.csv
+Jun-24 20:02:42.659 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jun-24 20:02:42.903 [main] WARN  nextflow.script.ScriptBinding - Access to undefined parameter `modules_testdata_base_path` -- Initialise it to a default value eg. `params.modules_testdata_base_path = some_value`
+Jun-24 20:02:42.910 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_88c3deb44a25e22f: /workspace/modules/nf-core/fastqc/.nf-test-4fc495ea801b362f5b0f1c5cc705c3a5.nf
+  Script_dc41886bdbd95b0b: /workspace/modules/nf-core/fastqc/main.nf
+Jun-24 20:02:42.911 [main] DEBUG nextflow.Session - Session aborted -- Cause: /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/nullgenomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz
+Jun-24 20:02:42.917 [main] ERROR nextflow.cli.Launcher - /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/nullgenomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz
+java.nio.file.NoSuchFileException: /workspace/modules/nf-core/fastqc/.nf-test/tests/4fc495ea801b362f5b0f1c5cc705c3a5/nullgenomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz
+	at nextflow.file.FileHelper.checkIfExists(FileHelper.groovy:1107)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at nextflow.Nextflow.file(Nextflow.groovy:134)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at Script_88c3deb44a25e22f$_runScript_closure4$_closure6.doCall(Script_88c3deb44a25e22f:34)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:343)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:328)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:280)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1007)
+	at groovy.lang.Closure.call(Closure.java:433)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at nextflow.script.WorkflowDef.run0(WorkflowDef.groovy:205)
+	at nextflow.script.WorkflowDef.run(WorkflowDef.groovy:189)
+	at nextflow.script.BindableDef.invoke_a(BindableDef.groovy:51)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at nextflow.script.BaseScript.run0(BaseScript.groovy:182)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:193)
+	at nextflow.script.parser.v1.ScriptLoaderV1.runScript(ScriptLoaderV1.groovy:246)
+	at nextflow.script.parser.v1.ScriptLoaderV1.runScript(ScriptLoaderV1.groovy)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:246)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:139)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:379)
+	at nextflow.cli.Launcher.run(Launcher.groovy:513)
+	at nextflow.cli.Launcher.main(Launcher.groovy:673)
