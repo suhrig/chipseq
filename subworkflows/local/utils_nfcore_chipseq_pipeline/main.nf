@@ -11,9 +11,9 @@
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { samplesheetToList         } from 'plugin/nf-schema'
+include { paramsHelp                } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 
@@ -31,10 +31,13 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
+    input             //  string: Path to input samplesheet
+    help              // boolean: Display help message and exit
+    help_full         // boolean: Show the full help message
+    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
-    ch_versions = Channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -49,9 +52,42 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+
+    def before_text = ""
+    def after_text = ""
+    before_text = """
+-\033[2m----------------------------------------------------\033[0m-
+                                        \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
+\033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
+\033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
+\033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
+                                        \033[0;32m`._,._,\'\033[0m
+\033[0;35m  nf-core/chipseq ${workflow.manifest.version}\033[0m
+-\033[2m----------------------------------------------------\033[0m-
+"""
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/chipseq/blob/master/CITATIONS.md
+"""
+    if (monochrome_logs) {
+        before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
+    }
+
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
+        null,
+        help,
+        help_full,
+        show_hidden,
+        before_text,
+        after_text,
+        command,
         null
     )
 
@@ -68,14 +104,13 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
-    // Create channel from input file provided through params.input
+    // Create channel from input file provided through input
     //
 
-    ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
+    ch_samplesheet = channel.fromList(samplesheetToList(input, "assets/schema_input.json"))
 
     emit:
     samplesheet = ch_samplesheet
-    versions    = ch_versions
 }
 
 /*
@@ -92,7 +127,6 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url        //  string: hook URL for notifications
     multiqc_report  //  string: Path to MultiQC report
 
     main:
@@ -111,18 +145,16 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
         completionSummary(monochrome_logs)
-        if (hook_url) {
-            imNotification(summary_params, hook_url)
-        }
+
     }
 
     workflow.onError {
-        log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
+        log.error "Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting"
     }
 }
 
@@ -151,12 +183,46 @@ def validateInputParameters() {
     }
 
     if (!params.macs_gsize) {
+        if (!params.read_length) {
+            macsGsizeError()
+        }
         macsGsizeWarn(log)
     }
+}
 
-    if (!params.read_length && !params.macs_gsize) {
-        error ("Both '--read_length' and '--macs_gsize' not specified! Please specify either to infer MACS3 genome size for peak calling.")
+//
+// Read lengths for which a pre-computed MACS3 genome size is available for the selected '--genome'
+//
+def igenomesMacsGsizeReadLengths() {
+    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+        def gsize = params.genomes[params.genome].get('macs_gsize')
+        if (gsize instanceof Map) {
+            return gsize.keySet().collect { read_length -> read_length.toString() }
+        }
     }
+    return []
+}
+
+//
+// Exit pipeline if the MACS3 genome size can neither be looked up nor calculated
+//
+def macsGsizeError() {
+    def read_lengths = igenomesMacsGsizeReadLengths()
+    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  The MACS3 effective genome size could not be determined.\n" +
+        "  Please provide one of the following:\n"
+    if (read_lengths) {
+        error_string +=
+            "  - '--read_length' (one of: ${read_lengths.join(', ')}) to use the value\n" +
+            "    pre-computed for '--genome ${params.genome}' in 'igenomes.config'.\n"
+    } else {
+        error_string +=
+            "  - '--read_length' to calculate it from the genome FASTA with 'khmer'.\n"
+    }
+    error_string +=
+        "  - '--macs_gsize' to set it explicitly, e.g. '--macs_gsize 2805665311'.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    error(error_string)
 }
 
 //
@@ -247,12 +313,21 @@ def gtfGffWarn(log) {
 }
 
 //
-// Print a warning if macs_gsize parameter has not been provided
+// Print a warning if the MACS3 genome size will be calculated with khmer
 //
 def macsGsizeWarn(log) {
-    log.warn "=============================================================================\n" +
-        "  --macs_gsize parameter has not been provided.\n" +
-        "  It will be auto-calculated by 'khmer unique-kmers.py' using the '--read_length' parameter.\n" +
-        "  Explicitly provide '--macs_gsize macs3_genome_size' to change this behaviour.\n" +
+    def read_lengths = igenomesMacsGsizeReadLengths()
+    def warn_string = "=============================================================================\n" +
+        "  '--macs_gsize' has not been provided"
+    if (read_lengths) {
+        warn_string += " and no pre-computed value exists for\n" +
+            "  '--genome ${params.genome}' with '--read_length ${params.read_length}' (available: ${read_lengths.join(', ')}).\n"
+    } else {
+        warn_string += ".\n"
+    }
+    warn_string +=
+        "  It will be calculated by 'khmer unique-kmers.py' using '--read_length ${params.read_length}'.\n" +
+        "  Explicitly provide '--macs_gsize' (e.g. '--macs_gsize 2805665311') to change this behaviour.\n" +
         "==================================================================================="
+    log.warn warn_string
 }

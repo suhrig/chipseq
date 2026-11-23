@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.2.0dev - [date]
+## v2.2.0dev - [unreleased<!-- TODO nf-core: replace with date on release -->]
 
 ### Enhancements & fixes
 
@@ -12,8 +12,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#432](https://github.com/nf-core/chipseq/issues/432)] - Fix `GFFREAD` call to have the two expected input channels.
 - [[PR #444](https://github.com/nf-core/chipseq/pull/444)] - Add empty map to ch_gff so that when provided by the user `GFFREAD` works.
 - [[#451](https://github.com/nf-core/chipseq/issues/451)] - Pass `map.single_read` to `SUBREAD_FEATURECOUNTS` as to correctly set parameter `-p`.
+- [PR #459](https://github.com/nf-core/chipseq/pull/459) - Improve JSON schema validation for nextflow_schema.json and schema_input.json
 - [[PR #462](https://github.com/nf-core/chipseq/pull/462)] - Updated pipeline template to [nf-core/tools 3.2.1](https://github.com/nf-core/tools/releases/tag/3.2.1)
-- Do not require `--fasta` to be set when `--genome` is set.
+- [PR #471](https://github.com/nf-core/chipseq/pull/471) - Do not require `--fasta` to be set when `--genome` is set.
+- [[#468](https://github.com/nf-core/chipseq/issues/468)] - Changed bigWig generation to use `-bga` option instead of `-bg` in `bedtools genomecov` for lower background levels and better IGV visualization. Users can revert to previous behavior using configuration. See [documentation](https://nf-co.re/chipseq/dev/docs/output/#normalised-bigwig-files) for details.
+- [[#483](https://github.com/nf-core/chipseq/issues/483)] - Partial update to topics channel.
+- [[#484](https://github.com/nf-core/chipseq/issues/484)] - Bulk, updated of modules and subworkflows.
+- [[#489](https://github.com/nf-core/chipseq/issues/489)] - Replace deprecated `CUSTOM_GETCHROMSIZES` with `SAMTOOLS_FAIDX`.
+- [[PR #493](https://github.com/nf-core/chipseq/pull/493)] - Follow up to #487.
+- [[#492](https://github.com/nf-core/chipseq/issues/492), [#417](https://github.com/nf-core/chipseq/issues/417)] - Refactor local modules to nf-core standard.
+- [[#416](https://github.com/nf-core/chipseq/issues/416)] - Moved the `KHMER_UNIQUEKMERS` logic to prepare_genome
+- [[#440](https://github.com/nf-core/chipseq/issues/440), [#510](https://github.com/nf-core/chipseq/issues/510)] - Fix
+  naming collisions when sample and replicate combination is identical for multiple antibodies see.
+- [[#467](https://github.com/nf-core/chipseq/issues/467), [#510](https://github.com/nf-core/chipseq/issues/510)] - Restrict the usage to one IP against one control replicate.
+- [[#479](https://github.com/nf-core/chipseq/issues/479)] - Changed the usage documentation for antibodies to be
+  required for IP samples. Since a ChIP IP sample will always have an antibody, it should be specified to distinguish
+  the sample from input/controls.
+- [[PR #514](https://github.com/nf-core/chipseq/pull/514)] - Updated pipeline template to [nf-core/tools
+  4.0.2](https://github.com/nf-core/tools/releases/tag/4.0.2).
+- [[#519] (https://github.com/nf-core/chipseq/issues/519)] - Changed merged libraries suffix to `.mLb.`.
+- [[#456] (https://github.com/nf-core/chipseq/issues/456)] - Use `--skip_preseq` by default.
+- [[#526] (https://github.com/nf-core/chipseq/issues/526)] - Bump Samtools version to 1.24.
+- [[PR #530](https://github.com/nf-core/chipseq/pull/530)] - Update `hommer/annotatepeaks` to topic channels.
+- [[#531] (https://github.com/nf-core/chipseq/issues/531)] - Changed chromap decompression - untarfiles (deprecated) to untar modules.
+- [[PR #533](https://github.com/nf-core/chipseq/pull/533)] - Update `khmers/uniquekmers` to topic channels.
+- [[PR #534](https://github.com/nf-core/chipseq/pull/534)] - Update `phantompeakqualtools` to topic channels.
+- [[PR #537](https://github.com/nf-core/chipseq/pull/537)] - Updated pipeline template to [nf-core/tools 4.0.3](https://github.com/nf-core/tools/releases/tag/4.0.3)
+- [[PR #542](https://github.com/nf-core/chipseq/pull/542)] - Updated pipeline template to [nf-core/tools 4.1.0](https://github.com/nf-core/tools/releases/tag/4.1.0),
+  increased nf-test selfhosted runners volume to 60gb
+- [[PR #547](https://github.com/nf-core/chipseq/pull/547)] - Updated pipeline template to [nf-core/tools 4.2.2](https://github.com/nf-core/tools/releases/tag/4.2.2)
+- [[PR #548](https://github.com/nf-core/chipseq/pull/548)] - Allow `--macs_gsize` in scientific notation (e.g. `2.7e9`), clarify the MACS3 genome size warning/error messages and document `--macs_gsize` and `--read_length` in the usage docs.
 
 ### Parameters
 
@@ -27,12 +55,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Software dependencies
 
-Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own
+[Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the
+pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to
+the last release have been listed below for reference.
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-|            |             |             |
-|            |             |             |
+### Software updates
+
+| Dependency                  | Old version | New version |
+| --------------------------- | ----------- | ----------- |
+| macs3                       | 3.0.1       | 3.0.4       |
+| bamtools                    | 2.5.2       | 2.5.3       |
+| samtools                    | 1.15.1      | 1.23        |
+| pysam                       | 0.19.0      | 0.23.3      |
+| bedtools                    | 2.30.0      | 2.31.1      |
+| bioconductor-biostrings     | 2.58.0      | 2.78.0      |
+| r-base                      | 4.0.3       | 4.5.3       |
+| r-reshape2                  | 1.4.4       | 1.4.5       |
+| r-optparse                  | 1.6.6       | 1.7.5       |
+| r-ggplot2                   | 3.3.3       | 4.0.2       |
+| r-scales                    | 1.1.1       | 1.4.0       |
+| r-viridis                   | 0.5.1       | 0.6.5       |
+| r-tidyverse                 | 1.3.0       | 2.0.0       |
+| bioconductor-complexheatmap | 2.6.2       | 2.26.1      |
+| star                        | 2.6.1d      | 2.7.11b     |
+| python                      | 3.8.3       | 3.12.12     |
+| multiqc                     | 1.25.1      | 1.33        |
+| deeptools                   | 3.5.5       | 3.5.6       |
+| bowtie2                     | 2.5.2       | 2.5.4       |
+| picard                      | 3.2.0       | 3.4.0       |
+| samtools                    | 1.23.1      | 1.24        |
+| bwa                         | 0.7.18      | 0.7.19      |
+| chromap                     | 0.2.6       | 0.3.2       |
+|                             |             |             |
 
 ## [[2.1.0](https://github.com/nf-core/chipseq/releases/tag/2.1.0)] - 2024-10-07
 
@@ -54,6 +109,7 @@ Thank you to everyone else that has contributed by reporting bugs, enhancements 
 
 ### Enhancements & fixes
 
+- [[PR #518](https://github.com/nf-core/chipseq/pull/518)] - Remove docker.io in container address in `annotate_boolean_peaks`
 - Updated pipeline template to [nf-core/tools 2.7.2](https://github.com/nf-core/tools/releases/tag/2.7.2)
 - [[#317](https://github.com/nf-core/chipseq/issues/317)] - Added metro map
 - [[#288](https://github.com/nf-core/chipseq/issues/291)] - Bump `chromap` version 2 and enable all the steps below chromap again when paired-end data is processed.

@@ -4,4 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::phantompeakqualtools=1.2.2"
+  - conda-forge::r-base=4.3.3
+  - bioconda::phantompeakqualtools=1.2.2
